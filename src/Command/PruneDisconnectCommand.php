@@ -32,6 +32,7 @@ class PruneDisconnectCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
+        // on pourrais eviter ce script si on passe le subscriber coté client..
         // todo : $request->getSchemeAndHttpHost()
 
         $url = 'https://localhost/.well-known/mercure?topic=%2F.well-known%2Fmercure%2Fsubscriptions%7B%2Ftopic%7D%7B%2Fsubscriber%7D';
@@ -78,22 +79,24 @@ class PruneDisconnectCommand extends Command
 //                                dump($obj);
                                 if (isset($obj['payload']['username'])) {
 
-                                    if ($obj['active'] == true) {
-                                        $output->writeln("+ Utilisateur connecté : " . $obj['payload']['username']);
+                                    if ($obj['topic'] == 'https://localhost/public') {
+                                        if ($obj['active'] == true) {
+                                            $output->writeln("+ Utilisateur connecté : " . $obj['payload']['username']);
+                                        } else {
+                                            $output->writeln("- Utilisateur deconnecté : " . $obj['payload']['username']);
+
+                                            $result = ['action' => 'disconnected', 'nick' => $obj['payload']['username']];
+
+                                            $update = new Update(
+                                                'https://localhost' . '/public',
+                                                json_encode($result)
+                                            );
+
+                                            $this->hub->publish($update);
+
+                                        }
                                     }
-                                    else {
-                                        $output->writeln("- Utilisateur deconnecté : " . $obj['payload']['username']);
 
-                                        $result = ['action' => 'disconnected' , 'nick' => $obj['payload']['username']] ;
-
-                                        $update = new Update(
-                                            'https://localhost' . '/public',
-                                            json_encode($result)
-                                        );
-
-                                        $this->hub->publish($update);
-
-                                    }
                                 }
                             }
                             $buffer = '';

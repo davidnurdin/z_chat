@@ -11,7 +11,7 @@
             </ul>
     </div>
 
-    <Sse :sseUrl="sseUrlPublic" :debug="true" @disconnected="handlePublicDisconnected" @connected="handlePublicConnected" />
+    <Sse :sseUrl="sseUrlPublic" :debug="true" @connected="handleSseIsConnected"  @someBodyIsDisconnected="handlePublicDisconnected" @someBodyIsConnected="handlePublicConnected" />
     <Sse :sseUrl="sseUrlPrivate" :debug="false" :private="true" :jwt="sseUrlPrivateJwt" />
     <Sse :sseUrl="sseUrlRooms" :debug="false" />
 </template>
@@ -41,6 +41,12 @@ const handlePublicDisconnected = async(user) => {
     }
 
 }
+
+const handleSseIsConnected = async() => {
+    console.log('SSE is connected !');
+    await fetchUsers();
+}
+
 const fetchUsers = async() => {
     fetch('/chat/users')
         .then(response => response.json())
@@ -61,7 +67,5 @@ const connectToChat = async() => {
 
 onMounted(async () => {
     await connectToChat();
-    setTimeout(fetchUsers,1000);
-
 });
 </script>

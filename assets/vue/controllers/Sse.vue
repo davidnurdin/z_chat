@@ -19,7 +19,7 @@ const props = defineProps({
     debug: Boolean
 });
 
-const emit = defineEmits(['connected','disconnected']);
+const emit = defineEmits(['someBodyIsConnected','someBodyIsDisconnected','connected','disconnected']);
 
 let dataDebug = ref('');
 
@@ -43,6 +43,7 @@ eventSource.onopen = () => {
     {
         dataDebug.value += "Connection to server opened.<br/><br/>"
     }
+    emit('connected');
 };
 
 eventSource.onerror = (error) => {
@@ -57,6 +58,7 @@ eventSource.onclose = () => {
     {
         dataDebug.value += "Connection to server closed.<br/><br/>"
     }
+    emit('disconnected');
 };
 
 // type (message default)
@@ -76,14 +78,14 @@ eventSource.onmessage = event => {
     if (data.action === 'connected')
     {
         console.log('CONNECT : ' + data.nick);
-        emit('connected', { id: '000' ,  name : data.nick });
+        emit('someBodyIsConnected', { id: '000' ,  name : data.nick });
 
     }
 
     if (data.action === 'disconnected')
     {
         console.log('DISCONNECT : ' + data.nick);
-        emit('disconnected', { id: '000' ,  name : data.nick });
+        emit('someBodyIsDisconnected', { id: '000' ,  name : data.nick });
 
     }
 
