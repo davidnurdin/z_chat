@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat page !{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Chat page</h1>
+
+    <div {{ vue_component('zChat',
+            {
+                'nick': nick ,
+                'sseUrlPublic' : mercure
+                (app.request.schemeAndHttpHost ~ '/public' ,
+                {
+                    'additionalClaims' :
+                    { 'mercure' :
+                        { 'payload' :
+                            { 'username' : 'tutu' , 'ip' : app.request.clientIp
+                            } } } }
+                ),
+                'sseUrlPrivate' : mercure(app.request.schemeAndHttpHost ~ '/private/666/{userId}'),
+                'sseUrlPrivateJwt' : sseUrlPrivateJwt,
+                'sseUrlRooms' :  mercure([app.request.schemeAndHttpHost ~ '/rooms/general' , app.request.schemeAndHttpHost ~ '/rooms/others'])
+            }) }}></div>
+{% endblock %}
