@@ -1,3 +1,4 @@
+/core
 
 ###> symfony/framework-bundle ###
 /.env.local

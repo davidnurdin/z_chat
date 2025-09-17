@@ -19,6 +19,8 @@ const props = defineProps({
     debug: Boolean
 });
 
+const emit = defineEmits(['connected','disconnected']);
+
 let dataDebug = ref('');
 
 if (props.debug)
@@ -66,11 +68,25 @@ eventSource.onmessage = event => {
     console.log(event);
     const data = JSON.parse(event.data);
 
-
     if (props.debug)
     {
         dataDebug.value += event.data + "<br/><br/>"
     }
+
+    if (data.action === 'connected')
+    {
+        console.log('CONNECT : ' + data.nick);
+        emit('connected', { id: '000' ,  name : data.nick });
+
+    }
+
+    if (data.action === 'disconnected')
+    {
+        console.log('DISCONNECT : ' + data.nick);
+        emit('disconnected', { id: '000' ,  name : data.nick });
+
+    }
+
 
     console.log(data)
 

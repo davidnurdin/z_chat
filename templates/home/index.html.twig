@@ -4,4 +4,12 @@
 
 {% block body %}
     {{ form(form) }}
+
+    Sample nick :
+        <ul>
+            <a href="{{url('app_chat')~ '?nick=John' }}" target="_blank">John</a>
+            <a href="{{url('app_chat')~ '?nick=Jane' }}" target="_blank">Jane</a>
+            <a href="{{url('app_chat')~ '?nick=Mike' }}" target="_blank">Mike</a>
+        </ul>
+
 {% endblock %}

@@ -6,6 +6,7 @@
 	frankenphp {
 		{$FRANKENPHP_CONFIG}
 
+		# disable if you wanna use xDebug (and recompile image)
 		worker {
 			file ./public/index.php
 			env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime
